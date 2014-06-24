@@ -11,7 +11,11 @@ module WebConsole
     end
 
     def index
-      @console_session = ConsoleSession.create
+      if params[:id]
+        @console_session = ConsoleSession.find(params[:id])
+      else
+        @console_session = ConsoleSession.create
+      end
     end
 
     def input
