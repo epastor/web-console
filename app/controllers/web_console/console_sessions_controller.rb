@@ -2,6 +2,8 @@ require_dependency 'web_console/application_controller'
 
 module WebConsole
   class ConsoleSessionsController < ApplicationController
+    include ActionController::Live
+
     rescue_from ConsoleSession::Unavailable do |exception|
       render json: exception, status: :gone
     end
@@ -13,6 +15,11 @@ module WebConsole
     def index
       if params[:id]
         @console_session = ConsoleSession.find(params[:id])
+        5.times {
+          response.stream.write "hello world\n"
+          sleep 2
+        }
+        response.stream.close
       else
         @console_session = ConsoleSession.create
       end
