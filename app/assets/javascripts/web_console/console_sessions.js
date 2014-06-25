@@ -1,5 +1,4 @@
 //= require web-console
-
 var AJAXTransport = (function(WebConsole) {
 
   var inherits = WebConsole.inherits;
@@ -81,6 +80,11 @@ var AJAXTransport = (function(WebConsole) {
   //
   // WebConsole#keysPressed is an alias for WebConsole#sendInput.
   AJAXTransport.prototype.sendInput = function(input) {
+    if( encodeURIComponent( input ) == "%0D" ){
+      window.terminal.write( '\r\n' );
+    }else{
+      //window.terminal.write( input );
+    }
     input || (input = '');
 
     if (this.disconnected) return;
@@ -132,7 +136,6 @@ window.addEventListener('load', function() {
   var geometry = calculateFitScreenGeometry();
   config.terminal.cols = geometry[0];
   config.terminal.rows = geometry[1];
-
   var terminal = window.terminal = new WebConsole.Terminal(config.terminal);
 
   terminal.on('data', function(data) {
@@ -142,8 +145,8 @@ window.addEventListener('load', function() {
   var transport = new AJAXTransport(config.transport);
 
   transport.on('pendingOutput', function(response) {
-    var json = JSON.parse(response);
-    if (json.output) terminal.write(json.output);
+    //var json = JSON.parse(response);
+    //if (json.output) terminal.write(json.output);
   });
 
   transport.on('disconnect', function() {

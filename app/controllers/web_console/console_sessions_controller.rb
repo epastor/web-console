@@ -25,6 +25,12 @@ module WebConsole
       end
     end
 
+    def show
+      puts "------->"
+      puts params[:id]
+      @console_session = ConsoleSession.find(params[:id])
+    end
+
     def input
       @console_session = ConsoleSession.find(params[:id])
       @console_session.send_input(console_session_params[:input])
